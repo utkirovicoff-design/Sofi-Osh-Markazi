@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="Sofi_Osh.png">
+  <title>Sofi Osh Markazi</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.pinimg.com/1200x/45/0e/d5/450ed5474455f3a7b1b800f6ce61058f.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .cart-icon {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      background: #e53935;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: slideUp 0.6s ease forwards;
+      transform: translateY(60px);
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .card h3 {
+      margin: 12px 0 8px;
+      font-size: 18px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #d32f2f;
+      margin: 8px 0;
+    }
+
+    .btn {
+      margin-top: 8px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      background: #e53935;
+      color: white;
+    }
+
+    .btn:hover {
+      background: #c62828;
+    }
+
+    /* Set yaratish box */
+    .box {
+      width: 90%;
+      margin: 30px auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 14px;
+      padding: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      animation: slideUp 0.8s ease forwards;
+      transform: translateY(80px);
+      opacity: 0;
+    }
+
+    .box-header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e53935;
+      padding-bottom: 6px;
+      text-align: center;
+      color: #e53935;
+    }
+
+    .small-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .small-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .small-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .small-card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .small-card h4 {
+      margin: 8px 0 4px;
+      font-size: 14px;
+    }
+
+    .small-card p {
+      font-size: 13px;
+      color: #d32f2f;
+      font-weight: bold;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    Sofi Osh Markazi
+    </div>
+    <div class="cart-icon" onclick="goCheckout()">🛒 (<span id="cartCount">0</span>)</div>
+  </header>
+
+  <!-- 3 ta tayyor set -->
+  <div class="container">
+    <div class="card">
+      <img src="oilaviy_set.jpg" alt="Oilaviy Set">
+      <h3>Oilaviy set</h3>
+      <p>4 pors osh, 1 kampot, 2 salat, 2 ayron, 2 non, choy</p>
+      <p class="price">200 000 so‘m</p>
+      <button class="btn" onclick="addToCart('Oilaviy set',200000)">Savatga qo‘shish</button>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1617196039654-5a1dbd6466b9" alt="Ikki kishilik set">
+      <h3>Ikki kishilik set</h3>
+      <p>2 pors osh, 1 kampot, 1 salat, 1 ayron, 2 non</p>
+      <p class="price">105 000 so‘m</p>
+      <button class="btn" onclick="addToCart('Ikki kishilik set',105000)">Savatga qo‘shish</button>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1633458632521-1e875582d283" alt="Bir kishilik set">
+      <h3>Bir kishilik set</h3>
+      <p>1 pors osh, 1 kola, 0.7 salat, 1 non</p>
+      <p class="price">55 000 so‘m</p>
+      <button class="btn" onclick="addToCart('Bir kishilik set',55000)">Savatga qo‘shish</button>
+    </div>
+  </div>
+
+  <!-- Yangi Set yaratish box -->
+  <div class="box">
+    <div class="box-header">🍽 O‘zingizning Setingizni yarating</div>
+
+    <!-- Oshlar -->
+    <h3 style="text-align:center; color:#d32f2f; margin:15px 0;">🍛 Oshlar</h3>
+    <div class="small-container">
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/uzbek-pilaf-plov-260nw-1664831263.jpg" alt="Sofi Osh 1 pors">
+        <h4>Sofi Osh 1 pors</h4>
+        <p>35 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Sofi Osh 1 pors',35000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/delicious-rice-pilaf-260nw-1721456008.jpg"
+          alt="Sofi Osh 0.7 pors">
+        <h4>Sofi Osh 0.7 pors</h4>
+        <p>32 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Sofi Osh 0.7 pors',32000)">Qo‘shish</button>
+      </div>
+    </div>
+
+    <!-- Shashlik -->
+    <h3 style="text-align:center; color:#d32f2f; margin:15px 0;">Shashlik</h3>
+    <div class="small-container">
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/uzbek-pilaf-plov-260nw-1664831263.jpg" alt="Shashlik">
+        <h4>Shashlik</h4>
+        <p>15 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Shashlik',15000)">Qo‘shish</button>
+      </div>
+    </div>
+
+    <!-- Salatlar -->
+    <h3 style="text-align:center; color:#388e3c; margin:20px 0;">🥗 Salatlar</h3>
+    <div class="small-container">
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/shakarob-uzbek-salad-260nw-1890183054.jpg" alt="Shakarob">
+        <h4>Sveji Salat (2 kishilik)</h4>
+        <p>10 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Shakarob',10000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/shakarob-uzbek-salad-260nw-1890183054.jpg" alt="Shakarob">
+        <h4>Sveji Salat (1 kishilik)</h4>
+        <p>7 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Shakarob',10000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/fresh-greek-salad-260nw-1077948620.jpg" alt="Grecheskiy">
+        <h4>Achchiq Chuchuk (2 kishilik)</h4>
+        <p>10 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Grecheskiy salat',22000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/caesar-salad-260nw-666666666.jpg" alt="Sezar">
+        <h4>Achchiq Chuchuk (1 kishilik)</h4>
+        <p>7 000 so‘m</p>
+        <small>Tovuq va ousli mashhur salat</small>
+        <button class="btn" onclick="addCustom('Sezar',25000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/fresh-olivier-salad-260nw-1234567890.jpg" alt="Olivye">
+        <h4>Chiroqchi/Co'poncha</h4>
+        <p>12 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Olivye',18000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/fresh-olivier-salad-260nw-1234567890.jpg" alt="Olivye">
+        <h4>Golinki</h4>
+        <p>12 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Olivye',18000)">Qo‘shish</button>
+      </div>
+    </div>
+
+    <!-- Ichimliklar -->
+    <h3 style="text-align:center; color:#0288d1; margin:20px 0;">🥤 Ichimliklar</h3>
+    <div class="small-container">
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/glass-homemade-kompot-260nw-1197307740.jpg" alt="Kampot">
+        <h4>Kampot</h4>
+        <p>12 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Kampot',12000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img
+          src="https://www.shutterstock.com/image-photo/ayran-traditional-turkish-fermented-drink-260nw-2144558363.jpg"
+          alt="Ayron">
+        <h4>Ayron</h4>
+        <p>8 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Ayron',8000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/cold-cola-glass-ice-260nw-999999999.jpg" alt="Coca-Cola">
+        <h4>Coca-Cola 1.5l</h4>
+        <p>15 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Coca-Cola',15000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/cold-cola-glass-ice-260nw-999999999.jpg" alt="Coca-Cola">
+        <h4>Coca-Cola 1l</h4>
+        <p>12 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Coca-Cola',12000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/cold-cola-glass-ice-260nw-999999999.jpg" alt="Pepsi">
+        <h4>Pepsi 1.5l</h4>
+        <p>15 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Pepsi',15000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/cold-cola-glass-ice-260nw-999999999.jpg" alt="Pepsi">
+        <h4>Pepsi 1l</h4>
+        <p>12 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Pepsi',12000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/cold-cola-glass-ice-260nw-999999999.jpg" alt="Fanta">
+        <h4>Fanta 1.5l</h4>
+        <p>15 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Fanta',15000)">Qo‘shish</button>
+      </div>
+      <div class="small-card">
+        <img src="https://www.shutterstock.com/image-photo/cold-cola-glass-ice-260nw-999999999.jpg" alt="Fanta">
+        <h4>Fanta 1l</h4>
+        <p>12 000 so‘m</p>
+        <button class="btn" onclick="addCustom('Fanta',12000)">Qo‘shish</button>
+      </div>
+    </div>
+
+    <!-- Tanlangan mahsulotlar -->
+    <div style="margin-top:20px;">
+      <h4>📝 Siz tanlagan mahsulotlar</h4>
+      <ul id="customList" style="font-size:13px; line-height:1.4; padding-left:18px; margin:6px 0;"></ul>
+      <p><b>Jami:</b> <span id="customTotal">0</span> so‘m</p>
+      <div style="text-align:center;margin-top:15px;">
+        <button class="btn" onclick="finalizeSet()">✅ Tayyor</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Sofi Osh Markazi — Barcha huquqlar himoyalangan
+  </footer>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let customSet = [];
+
+    function updateCartCount() {
+      document.getElementById("cartCount").textContent =
+        cart.reduce((a, b) => a + b.qty, 0);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function addToCart(name, price) {
+      let existing = cart.find(i => i.name === name);
+      if (existing) existing.qty++;
+      else cart.push({ name, price, qty: 1 });
+      updateCartCount();
+      alert(name + " savatga qo‘shildi!");
+    }
+
+    // Maxsus setga qo‘shish
+    function addCustom(name, price) {
+      customSet.push({ name, price });
+      renderCustomList();
+      alert(name + " setga qo‘shildi!");
+    }
+
+    // Maxsus set ro‘yxatini chizish
+    function renderCustomList() {
+      let list = document.getElementById("customList");
+      let totalBox = document.getElementById("customTotal");
+      list.innerHTML = "";
+      let total = 0;
+      customSet.forEach((item, index) => {
+        let li = document.createElement("li");
+        li.textContent = item.name + " - " + item.price.toLocaleString() + " so‘m ";
+        // ❌ udalit qilish knopkasi
+        let delBtn = document.createElement("button");
+        delBtn.textContent = "❌";
+        delBtn.style.marginLeft = "6px";
+        delBtn.onclick = () => {
+          customSet.splice(index, 1);
+          renderCustomList();
+        };
+        li.appendChild(delBtn);
+        list.appendChild(li);
+        total += item.price;
+      });
+      totalBox.textContent = total.toLocaleString();
+    }
+
+    function saveOrderToHistory(order) {
+      let history = JSON.parse(localStorage.getItem("history")) || [];
+      history.push(order);
+      localStorage.setItem("history", JSON.stringify(history));
+    }
+    function placeOrder(cart) {
+      let order = {
+        time: new Date().toLocaleString(),
+        items: cart.map(i => i.name + " × " + i.qty).join(", "),
+        total: cart.reduce((a, b) => a + b.price * b.qty, 0)
+      };
+      saveOrderToHistory(order);
+      // keyin telegramga yuborish va checkout.htmlga o‘tish
+    }
+
+
+    function finalizeSet() {
+      if (customSet.length === 0) {
+        alert("❌ Avval mahsulot tanlang!");
+        return;
+      }
+      let total = customSet.reduce((a, b) => a + b.price, 0);
+
+      // Maxsus Setni tarkibi bilan savatga qo‘shamiz
+      cart.push({
+        name: "Maxsus Set",
+        price: total,
+        qty: 1,
+        components: customSet.map(c => ({ name: c.name, qty: 1 }))
+      });
+
+      customSet = [];
+      renderCustomList(); // 🔥 shu joy qo‘shilishi kerak
+      updateCartCount();
+      alert("✅ Maxsus set savatga qo‘shildi!");
+    }
+
+
+    function goCheckout() {
+      window.location.href = "cart.html";
+    }
+
+    updateCartCount();
+  </script>
+
+</body>
+
+</html>
