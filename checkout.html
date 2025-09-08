@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="Sofi_Osh.png">
+  <title>Buyurtmani yakunlash — Sofi Osh Markazi</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    :root {
+      --accent: #d32f2f;
+      --green: #2e7d32;
+      --bg: #f4f6f8;
+      --card: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: #222
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #111;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 50
+    }
+
+    .back {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 17px
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 20px auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px
+    }
+
+    @media(max-width:900px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 12px
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, .06)
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 6px;
+      font-size: 15px
+    }
+
+    .btnPrimary {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700
+    }
+
+    .btnPrimary:hover {
+      opacity: .95
+    }
+
+    .muted {
+      font-size: 13px;
+      color: #666
+    }
+
+    .items {
+      max-height: 320px;
+      overflow: auto;
+      border: 1px dashed #eee;
+      padding: 8px;
+      border-radius: 8px
+    }
+
+    .itemRow {
+      padding: 10px;
+      border-bottom: 1px solid #f1f1f1
+    }
+
+    .itemHead {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 600
+    }
+
+    .itemComps {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #444;
+      line-height: 1.4
+    }
+
+    .itemRow:last-child {
+      border-bottom: none
+    }
+
+    .totalBox {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      margin-top: 10px
+    }
+
+    #mapModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .mapBox {
+      width: 100%;
+      max-width: 960px;
+      height: 520px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mapHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #f1f1f1;
+      flex-shrink: 0
+    }
+
+    #map {
+      flex: 1;
+      width: 100%;
+      height: 100%
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <button class="back" onclick="goBack()">⬅️ Ortga</button>
+    <div class="brand">Sofi Osh Markazi — Buyurtma</div>
+  </header>
+
+  <div class="container">
+    <!-- LEFT -->
+    <div class="card">
+      <h2>Buyurtmani yakunlash</h2>
+
+      <label>👤 Ism</label>
+      <input id="name" type="text" placeholder="Ismingizni kiriting" />
+
+      <label>📞 Telefon</label>
+      <input id="phone" type="tel" placeholder="+998(XX)XXX-XX-XX" />
+
+      <label>📍 Manzil</label>
+      <input id="address" type="text" placeholder="Manzilni kiriting yoki xaritadan tanlang" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btnPrimary" onclick="openMapModal()" style="flex:1">🌍 Xaritadan tanlash</button>
+        <button onclick="clearAddress()" style="padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff">❌
+          Tozalash</button>
+      </div>
+      <div id="selectedPreview" class="muted" style="margin-top:8px"></div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card">
+      <h3>Buyurtma — sahifa</h3>
+      <div class="items" id="itemsList"></div>
+      <div class="totalBox">
+        <span>Jami:</span>
+        <span id="totalText">0 so'm</span>
+      </div>
+      <button class="btnPrimary" style="margin-top:10px" onclick="submitOrder()">✅ Buyurtma berish</button>
+    </div>
+  </div>
+
+  <!-- MAP MODAL -->
+  <div id="mapModal">
+    <div class="mapBox">
+      <div class="mapHeader">
+        <b>Xaritadan joy tanlang</b>
+        <div style="display:flex;gap:8px">
+          <button onclick="confirmLocation()" class="btnPrimary">✅ Saqlash</button>
+          <button onclick="closeMapModal()"
+            style="background:#d32f2f;color:#fff;border:none;padding:8px 10px;border-radius:8px">❌ Yopish</button>
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+  <script>
+    /* === CONFIG === */
+    const BOT_TOKEN = "8342099616:AAGFJb6EP4gMw25vpeovUIxkbDc6aULn2lM";
+    const CHAT_ID = "8192672289";
+
+    /* === SET TARKIBI === */
+    const SET_DEFS = {
+      "Oilaviy set": {
+        components: [
+          { name: "Osh", qty: 4 },
+          { name: "Kampot", qty: 1 },
+          { name: "Salat", qty: 2 },
+          { name: "Ayron", qty: 2 },
+          { name: "Non", qty: 2 },
+          { name: "Choy", qty: 1 }
+        ]
+      },
+      "Ikki kishilik set": {
+        components: [
+          { name: "Osh", qty: 2 },
+          { name: "Kampot", qty: 1 },
+          { name: "Salat", qty: 1 },
+          { name: "Ayron", qty: 1 },
+          { name: "Non", qty: 2 }
+        ]
+      },
+      "Bir kishilik set": {
+        components: [
+          { name: "Osh", qty: 1 },
+          { name: "Kola", qty: 1 },
+          { name: "Salat", qty: 1 },
+          { name: "Non", qty: 1 }
+        ]
+      }
+    };
+
+    /* === CART === */
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    /* === HELPERS === */
+    function formatMoney(n) {
+      return Number(n || 0).toLocaleString("uz-UZ") + " so'm";
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+    function getComponentsFor(item) {
+      if (Array.isArray(item.components) && item.components.length) return item.components;
+      const def = SET_DEFS[item.name];
+      return def?.components || [];
+    }
+
+    /* === SAVATNI CHIQARISH === */
+    function renderCart() {
+      const box = document.getElementById("itemsList");
+      box.innerHTML = "";
+      if (!cart.length) {
+        box.innerHTML = "<div class='muted'>Savat bo'sh</div>";
+        document.getElementById("totalText").textContent = formatMoney(0);
+        return;
+      }
+      let total = 0;
+      cart.forEach(it => {
+        const lineSum = (it.qty || 1) * (it.price || 0);
+        total += lineSum;
+
+        const row = document.createElement("div");
+        row.className = "itemRow";
+        row.innerHTML = `
+      <div class="itemHead">
+        <div>${escapeHtml(it.name)} × ${it.qty || 1}</div>
+        <div>${formatMoney(lineSum)}</div>
+      </div>
+    `;
+
+        const comps = getComponentsFor(it);
+        if (comps.length) {
+          const ul = document.createElement("div");
+          ul.className = "itemComps";
+          ul.innerHTML = comps.map(c => {
+            const q = (c.qty || 1) * (it.qty || 1);
+            return `▪️ ${escapeHtml(c.name)} × ${q}`;
+          }).join("<br>");
+          row.appendChild(ul);
+        }
+        box.appendChild(row);
+      });
+      document.getElementById("totalText").textContent = formatMoney(total);
+    }
+    renderCart();
+
+    /* === MAP === */
+    let map, marker, lastAddress = null;
+    function openMapModal() {
+      document.getElementById("mapModal").style.display = "flex";
+      if (!map) {
+        map = L.map("map").setView([39.5, 64.0833], 12);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19, attribution: "© OpenStreetMap"
+        }).addTo(map);
+        map.on("click", async e => {
+          if (marker) marker.setLatLng(e.latlng);
+          else marker = L.marker(e.latlng).addTo(map);
+          try {
+            const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${e.latlng.lat}&lon=${e.latlng.lng}&accept-language=uz`);
+            const data = await r.json();
+            lastAddress = {
+              text: data.display_name || `Koordinata: ${e.latlng.lat}, ${e.latlng.lng}`,
+              lat: e.latlng.lat, lon: e.latlng.lng
+            };
+            document.getElementById("selectedPreview").textContent = "Tanlangan: " + (data.display_name || "");
+          } catch {
+            lastAddress = { text: `Koordinata: ${e.latlng.lat}, ${e.latlng.lng}`, lat: e.latlng.lat, lon: e.latlng.lng };
+          }
+        });
+      }
+    }
+    function closeMapModal() { document.getElementById("mapModal").style.display = "none"; }
+    function confirmLocation() {
+      if (!lastAddress) { alert("Xaritadan joy tanlang"); return; }
+      document.getElementById("address").value = lastAddress.text;
+      closeMapModal();
+    }
+    function clearAddress() {
+      document.getElementById("address").value = "";
+      document.getElementById("selectedPreview").textContent = "";
+      lastAddress = null;
+      if (marker) { map.removeLayer(marker); marker = null; }
+    }
+
+    /* === TELEFON FORMAT === */
+    const phoneInput = document.getElementById("phone");
+    phoneInput.addEventListener("input", function () {
+      let value = this.value.replace(/\D/g, "");
+      if (value.length > 12) value = value.substring(0, 12);
+      let formatted = "";
+      if (value.length > 0) formatted += "+" + value.substring(0, 3);
+      if (value.length >= 5) formatted += "(" + value.substring(3, 5);
+      else if (value.length > 3) formatted += "(" + value.substring(3);
+      if (value.length >= 8) formatted += ")" + value.substring(5, 8);
+      else if (value.length > 5) formatted += ")" + value.substring(5);
+      if (value.length >= 10) formatted += "-" + value.substring(8, 10);
+      else if (value.length > 8) formatted += "-" + value.substring(8);
+      if (value.length >= 12) formatted += "-" + value.substring(10, 12);
+      else if (value.length > 10) formatted += "-" + value.substring(10);
+      this.value = formatted;
+    });
+
+    /* === TELEGRAMGA BUYURTMA YUBORISH === */
+    function buildOrderLines() {
+      const lines = [];
+      cart.forEach(it => {
+        const sum = (it.qty || 1) * (it.price || 0);
+        lines.push(`• ${it.name} × ${it.qty || 1} — ${formatMoney(sum)}`);
+        const comps = getComponentsFor(it);
+        if (comps.length) {
+          comps.forEach(c => {
+            const q = (c.qty || 1) * (it.qty || 1);
+            lines.push(`   └ ${c.name} × ${q}`);
+          });
+        }
+      });
+      return lines.join("\n");
+    }
+
+    async function submitOrder() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+
+      if (!name || !phone || !address) {
+        alert("Barcha maydonlarni to‘ldiring");
+        return;
+      }
+      if (phone.length < 17) {
+        alert("Telefon raqamingizni to‘liq kiriting: +998(XX)XXX-XX-XX");
+        return;
+      }
+
+      const total = cart.reduce((s, it) => s + (it.qty || 1) * (it.price || 0), 0);
+      const detailLines = buildOrderLines();
+      const mapLink = lastAddress ? `\n🌍 <a href="https://yandex.uz/maps/?pt=${lastAddress.lon},${lastAddress.lat}&z=16">Xaritada ko‘rish</a>` : "";
+
+      const msg =
+        `🛒 <b>Yangi buyurtma!</b> 
+👤 ${escapeHtml(name)}
+📞 ${escapeHtml(phone)}
+📍 ${escapeHtml(address)}${mapLink}
+
+${escapeHtml(detailLines)}
+
+💰 Jami: <b>${formatMoney(total)}</b>`;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: msg,
+            parse_mode: "HTML",
+            disable_web_page_preview: true
+          })
+        });
+
+        localStorage.removeItem("cart");
+        alert("✅ Buyurtma yuborildi!");
+        window.location.href = "index.html";
+      } catch (e) {
+        console.error(e);
+        alert("❌ Telegramga yuborishda xatolik.");
+      }
+    }
+  </script>
+</body>
+
+</html>
