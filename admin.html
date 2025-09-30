@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sofi Osh Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .section {
+            background: white;
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            font-size: 22px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #f8f8f8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. Sarlavha -->
+    <h1>🍴 Sofi Osh Admin Panel</h1>
+
+    <!-- 2. Nazad tugmasi -->
+    <a href="index.html" class="btn" onclick="goBack()">⬅️ Nazad</a>
+
+    <!-- 3. Restorant holati -->
+    <div class="section">
+        <h2>📅 Restorant Ish Vaqti</h2>
+        <p>Hozirgi holat: <span id="statusText"></span></p>
+        <button class="btn" onclick="toggleStatus()">Holatni o‘zgartirish</button>
+    </div>
+
+    <!-- 4. Statistika -->
+    <div class="section">
+        <h2>📊 Statistika</h2>
+        <p>Mahsulotlar soni: <span id="productCount">0</span></p>
+        <p>Umumiy daromad: <span id="totalRevenue">0</span> so‘m</p>
+    </div>
+
+    <!-- 5. Mijozlar bazasi -->
+    <div class="section">
+        <h2>👥 Mijozlar Bazasi</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ism</th>
+                    <th>Telefon</th>
+                    <th>Buyurtma</th>
+                    <th>Summa</th>
+                </tr>
+            </thead>
+            <tbody id="customerList">
+                <!-- Dinamik ravishda to‘ldiriladi -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // === 2. Nazad tugmasi ===
+        function goBack() {
+            window.location.href = "index.html";
+            location.reload();
+        }
+
+        // === 3. Restorant ochiq/yopiq holati ===
+        function loadStatus() {
+            let status = localStorage.getItem("restaurantStatus") || "Ochiq";
+            document.getElementById("statusText").innerText = status;
+        }
+
+        function toggleStatus() {
+            let current = localStorage.getItem("restaurantStatus") || "Ochiq";
+            let newStatus = current === "Ochiq" ? "Yopiq" : "Ochiq";
+            localStorage.setItem("restaurantStatus", newStatus);
+            loadStatus();
+            alert("Restorant holati o‘zgartirildi: " + newStatus);
+        }
+
+        // === 4. Statistika ===
+        function loadStats() {
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+            let totalRevenue = localStorage.getItem("totalRevenue") || 0;
+
+            document.getElementById("productCount").innerText = products.length;
+            document.getElementById("totalRevenue").innerText = totalRevenue;
+        }
+
+        // === 5. Mijozlar bazasi ===
+        function loadCustomers() {
+            let customers = JSON.parse(localStorage.getItem("customers")) || [];
+            let tbody = document.getElementById("customerList");
+            tbody.innerHTML = "";
+
+            customers.forEach(c => {
+                let row = `<tr>
+          <td>${c.name}</td>
+          <td>${c.phone}</td>
+          <td>${c.order}</td>
+          <td>${c.amount} so‘m</td>
+        </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Sahifa ochilganda yuklanadi
+        loadStatus();
+        loadStats();
+        loadCustomers();
+    </script>
+
+</body>
+
+</html>
